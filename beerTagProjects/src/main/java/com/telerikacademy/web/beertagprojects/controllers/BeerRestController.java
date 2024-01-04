@@ -1,19 +1,15 @@
 package com.telerikacademy.web.beertagprojects.controllers;
 
-import com.telerikacademy.web.beertagprojects.configuration.BeanConfiguration;
 import com.telerikacademy.web.beertagprojects.exceptions.DuplicateEntityException;
 import com.telerikacademy.web.beertagprojects.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.beertagprojects.models.Beer;
 import com.telerikacademy.web.beertagprojects.services.BeerService;
-import com.telerikacademy.web.beertagprojects.services.BeerServiceImpl;
 import jakarta.validation.Valid;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,9 +18,10 @@ public class BeerRestController {
 
     private BeerService service;
 
-    public BeerRestController() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(BeanConfiguration.class);
-        this.service = context.getBean(BeerService.class);
+    @Autowired
+    public BeerRestController(BeerService service) {
+
+        this.service = service;
     }
 
     @GetMapping
@@ -60,9 +57,9 @@ public class BeerRestController {
     public Beer update(@PathVariable int id, @Valid @RequestBody Beer newBeer) {
         try {
             service.update(newBeer);
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (DuplicateEntityException e){
+        } catch (DuplicateEntityException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
         return newBeer;
@@ -72,7 +69,7 @@ public class BeerRestController {
     public void delete(@PathVariable int id) {
         try {
             service.delete(id);
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }

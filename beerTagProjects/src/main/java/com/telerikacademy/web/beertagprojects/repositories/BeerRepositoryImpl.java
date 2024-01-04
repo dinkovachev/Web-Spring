@@ -2,12 +2,12 @@ package com.telerikacademy.web.beertagprojects.repositories;
 
 import com.telerikacademy.web.beertagprojects.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.beertagprojects.models.Beer;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class BeerRepositoryImpl implements BeerRepository {
     private List<Beer> beers;
 
@@ -19,18 +19,20 @@ public class BeerRepositoryImpl implements BeerRepository {
     }
 
     @Override
-    public List<Beer> getBeers(){
+    public List<Beer> getBeers() {
         return beers;
     }
+
     @Override
-    public Beer findBeerById(int id){
+    public Beer findBeerById(int id) {
         return beers.stream()
                 .filter(beer -> beer.getId() == id)
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("Beer", id));
     }
+
     @Override
-    public Beer getByName(String name){
+    public Beer getByName(String name) {
         return beers.stream()
                 .filter(beer -> beer.getName().equals(name))
                 .findFirst()
@@ -38,18 +40,19 @@ public class BeerRepositoryImpl implements BeerRepository {
     }
 
     @Override
-    public void create(Beer beer){
+    public void create(Beer beer) {
         beers.add(beer);
     }
 
     @Override
-    public void update(Beer beer){
+    public void update(Beer beer) {
         Beer beerToUpdate = findBeerById(beer.getId());
         beerToUpdate.setName(beer.getName());
         beerToUpdate.setAbv(beer.getAbv());
     }
+
     @Override
-    public void delete(int id){
+    public void delete(int id) {
         Beer beerToDelete = findBeerById(id);
         beers.remove(beerToDelete);
     }

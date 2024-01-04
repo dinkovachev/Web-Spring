@@ -2,12 +2,14 @@ package com.telerikacademy.web.beertagprojects.repositories;
 
 import com.telerikacademy.web.beertagprojects.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.beertagprojects.models.Beer;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class BeerMapRepositoryImpl implements BeerRepository {
 
     private Map<Integer, Beer> beeers;
