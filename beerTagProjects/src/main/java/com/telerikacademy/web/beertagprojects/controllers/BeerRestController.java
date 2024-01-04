@@ -1,7 +1,14 @@
 package com.telerikacademy.web.beertagprojects.controllers;
 
+import com.telerikacademy.web.beertagprojects.configuration.BeanConfiguration;
+import com.telerikacademy.web.beertagprojects.exceptions.DuplicateEntityException;
+import com.telerikacademy.web.beertagprojects.exceptions.EntityNotFoundException;
 import com.telerikacademy.web.beertagprojects.models.Beer;
+import com.telerikacademy.web.beertagprojects.services.BeerService;
+import com.telerikacademy.web.beertagprojects.services.BeerServiceImpl;
 import jakarta.validation.Valid;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,18 +19,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/beers")
 public class BeerRestController {
-    private final List<Beer> beers;
+
+    private BeerService service;
 
     public BeerRestController() {
-        this.beers = new ArrayList<>();
-
-        beers.add(new Beer(1, "Corona", 4.5));
-        beers.add(new Beer(2, "HoeGarden", 5.5));
+        ApplicationContext context = new AnnotationConfigApplicationContext(BeanConfiguration.class);
+        this.service = context.getBean(BeerService.class);
     }
 
     @GetMapping
     public List<Beer> getBeers() {
-        return beers;
+        return service.getBeers();
     }
 
     @GetMapping("/{id}")
@@ -32,32 +38,43 @@ public class BeerRestController {
     }
 
     private Beer findBeerById(int id) {
-        return beers.stream()
-                .filter(beer -> beer.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        String.format("Beer with id %d not found.", id)));
+        try {
+            return service.findBeerById(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @PostMapping
     public Beer create(@Valid @RequestBody Beer beer) {
-        beers.add(beer);
+        try {
+            service.create(beer);
+        } catch (DuplicateEntityException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
         return beer;
     }
 
     @PutMapping("/{id}")
     public Beer update(@PathVariable int id, @Valid @RequestBody Beer newBeer) {
-        Beer beer = findBeerById(id);
-        beer.setName(newBeer.getName());
-        beer.setAbv(newBeer.getAbv());
-        return beer;
+        try {
+            service.update(newBeer);
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (DuplicateEntityException e){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
+        return newBeer;
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable int id){
-        Beer beer = findBeerById(id);
-        beers.remove(beer);
+    public void delete(@PathVariable int id) {
+        try {
+            service.delete(id);
+        } catch (EntityNotFoundException e){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
 }
