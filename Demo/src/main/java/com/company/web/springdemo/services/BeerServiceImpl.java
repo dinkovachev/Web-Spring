@@ -49,7 +49,7 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     public void update(Beer beer, User user) {
-        if (!user.isAdmin()) {
+        if (!user.isAdmin() || beer.getCreatedBy().equals(user)) {
             throw new UnauthorizedOperationException("Only admins can modify beer");
         }
         boolean duplicateExists = true;

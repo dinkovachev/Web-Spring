@@ -14,7 +14,7 @@ public class UserRepositoryImpl implements UserRepository {
     public UserRepositoryImpl() {
         this.users = new ArrayList<>();
         users.add(new User(1, "pesho", "randomPassword1", true));
-        users.add(new User(2, "vlady", "randomPassword2", false));
+        users.add(new User(2, "vladi", "randomPassword2", false));
         users.add(new User(3, "nadya", "randomPassword3", false));
 
     }
