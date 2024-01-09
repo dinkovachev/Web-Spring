@@ -20,17 +20,27 @@ public class AuthenticationHelper {
     }
 
     public User tryGetUser(HttpHeaders headers) {
-        if (!headers.containsKey(AUTHORIZATION_HEADER_NAME)){
+        if (!headers.containsKey(AUTHORIZATION_HEADER_NAME)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                     "The requested resource requires authentication.");
         }
-        try {
-            String username = headers.getFirst(AUTHORIZATION_HEADER_NAME);
-
-
-            return service.getByUsername(username);
-        } catch (EntityNotFoundException e){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username.");
+        String authorization = headers.getFirst(AUTHORIZATION_HEADER_NAME);
+        String[] credentials = authorization.split(":");
+        if (credentials.length == 2) {
+            String username = credentials[0];
+            String password = credentials[1];
+            try {
+                User user = service.getByUsername(username);
+                if (user != null && user.getPassword().equals(password)) {
+                    return user;
+                } else {
+                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "InvalidPassword");
+                }
+            } catch (EntityNotFoundException e) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username");
+            }
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid authentication.");
         }
     }
 }
