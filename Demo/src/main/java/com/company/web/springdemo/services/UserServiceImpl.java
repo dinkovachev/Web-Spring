@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     public UserServiceImpl(UserRepository userRepository) {
@@ -16,16 +16,29 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<User> getAll() {
+
         return userRepository.getAll();
     }
 
     @Override
     public User getById(int id) {
+
         return userRepository.getById(id);
     }
 
     @Override
     public User getByUsername(String username) {
+
         return userRepository.getByUsername(username);
     }
+
+    @Override
+    public User create(User user) {
+        //checkUsername -> Exception that will be thrown
+        //checkPassword -> Exception that will be thrown
+        //checkData -> Exception that will be thrown
+        return userRepository.create(user);
+    }
+
+
 }

@@ -14,6 +14,8 @@ import java.util.List;
 @Service
 public class BeerServiceImpl implements BeerService {
 
+    public static final String ONLY_ADMINS_CAN_MODIFY_BEER_ERROR_MESSAGE =
+            "Only admins and users that created beer can modify beer";
     private final BeerRepository repository;
 
     @Autowired
@@ -43,15 +45,13 @@ public class BeerServiceImpl implements BeerService {
         if (duplicateExists) {
             throw new EntityDuplicateException("Beer", "name", beer.getName());
         }
-
+        beer.setCreatedBy(user);
         repository.create(beer, user);
     }
 
     @Override
     public void update(Beer beer, User user) {
-        if (!user.isAdmin() || beer.getCreatedBy().equals(user)) {
-            throw new UnauthorizedOperationException("Only admins can modify beer");
-        }
+
         boolean duplicateExists = true;
         try {
             Beer existingBeer = repository.get(beer.getName());
@@ -65,16 +65,22 @@ public class BeerServiceImpl implements BeerService {
         if (duplicateExists) {
             throw new EntityDuplicateException("Beer", "name", beer.getName());
         }
-
+        checkModifyPermission(repository.get(beer.getId()), user);
         repository.update(beer);
     }
 
     @Override
     public void delete(int id, User user) {
-        if (!user.isAdmin()){
-            throw new UnauthorizedOperationException("Only admins can delete beer.");
-        }
+        checkModifyPermission(repository.get(id), user);
         repository.delete(id);
+    }
+
+    private static void checkModifyPermission(Beer beer, User user) {
+        if (!user.isAdmin()) {
+            if (!beer.getCreatedBy().equals(user)) {
+                throw new UnauthorizedOperationException(ONLY_ADMINS_CAN_MODIFY_BEER_ERROR_MESSAGE);
+            }
+        }
     }
 
 }

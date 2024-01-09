@@ -1,8 +1,10 @@
 package com.company.web.springdemo.controllers;
 
+import com.company.web.springdemo.exceptions.AuthorizationException;
 import com.company.web.springdemo.exceptions.EntityDuplicateException;
 import com.company.web.springdemo.exceptions.EntityNotFoundException;
 import com.company.web.springdemo.exceptions.UnauthorizedOperationException;
+import com.company.web.springdemo.helpers.AuthenticationHelper;
 import com.company.web.springdemo.helpers.BeerMapper;
 import com.company.web.springdemo.models.Beer;
 import com.company.web.springdemo.models.BeerDto;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -23,7 +26,6 @@ public class BeerRestController {
 
     private final BeerService service;
     private final BeerMapper beerMapper;
-
     private final AuthenticationHelper authenticationHelper;
 
     @Autowired
@@ -64,6 +66,8 @@ public class BeerRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        } catch (AuthorizationException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
@@ -78,7 +82,7 @@ public class BeerRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (UnauthorizedOperationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
@@ -90,7 +94,7 @@ public class BeerRestController {
             service.delete(id, user);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (UnauthorizedOperationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }

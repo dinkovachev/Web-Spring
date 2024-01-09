@@ -18,18 +18,21 @@ public class BeerRepositoryImpl implements BeerRepository {
     private final List<Beer> beers;
 
     @Autowired
-    public BeerRepositoryImpl(StyleRepository styleRepository) {
+    public BeerRepositoryImpl(StyleRepository styleRepository, UserRepository userRepository) {
         beers = new ArrayList<>();
         Beer beer = new Beer(1, "Glarus English Ale", 4.6);
         beer.setStyle(styleRepository.get(1));
+        beer.setCreatedBy(userRepository.getById(1));
         beers.add(beer);
 
         beer = new Beer(2, "Rhombus Porter", 5.0);
         beer.setStyle(styleRepository.get(2));
+        beer.setCreatedBy(userRepository.getById(2));
         beers.add(beer);
 
         beer = new Beer(3, "Opasen Char", 6.6);
         beer.setStyle(styleRepository.get(3));
+        beer.setCreatedBy(userRepository.getById(3));
         beers.add(beer);
     }
 
@@ -64,7 +67,7 @@ public class BeerRepositoryImpl implements BeerRepository {
     public void create(Beer beer, User user) {
         int nextId = beers.size() + 1;
         beer.setId(nextId);
-        beer.setCreatedBy(user);
+     //   beer.setCreatedBy(user);
         beers.add(beer);
     }
 

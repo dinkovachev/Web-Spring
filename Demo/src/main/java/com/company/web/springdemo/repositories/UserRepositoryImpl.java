@@ -2,6 +2,7 @@ package com.company.web.springdemo.repositories;
 
 import com.company.web.springdemo.exceptions.EntityNotFoundException;
 import com.company.web.springdemo.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -40,6 +41,12 @@ public class UserRepositoryImpl implements UserRepository {
                 .filter(user -> user.getUsername().equalsIgnoreCase(username))
                 .findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("User", "username", username));
+    }
+
+    @Override
+    public User create(User user) {
+         users.add(user);
+        return user;
     }
 
 }
