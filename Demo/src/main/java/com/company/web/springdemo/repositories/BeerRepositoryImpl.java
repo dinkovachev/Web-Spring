@@ -12,12 +12,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Repository
+//@Repository
 public class BeerRepositoryImpl implements BeerRepository {
 
     private final List<Beer> beers;
 
-    @Autowired
+//    @Autowired
     public BeerRepositoryImpl(StyleRepository styleRepository, UserRepository userRepository) {
         beers = new ArrayList<>();
         Beer beer = new Beer(1, "Glarus English Ale", 4.6);
@@ -56,7 +56,7 @@ public class BeerRepositoryImpl implements BeerRepository {
     }
 
     @Override
-    public Beer get(String name) {
+    public Beer getByName(String name) {
         return beers.stream()
                 .filter(beer -> beer.getName().equals(name))
                 .findFirst()

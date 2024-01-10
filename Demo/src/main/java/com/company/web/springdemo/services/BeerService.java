@@ -10,6 +10,7 @@ public interface BeerService {
     List<Beer> get(String name, Double minAbv, Double maxAbv, Integer styleId, String sortBy, String sortOrder);
 
     Beer get(int id);
+    Beer getByName(String name);
 
     void create(Beer beer, User user);
 

@@ -34,10 +34,15 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
+    public Beer getByName(String name) {
+        return repository.getByName(name);
+    }
+
+    @Override
     public void create(Beer beer, User user) {
         boolean duplicateExists = true;
         try {
-            repository.get(beer.getName());
+            repository.getByName(beer.getName());
         } catch (EntityNotFoundException e) {
             duplicateExists = false;
         }
@@ -54,7 +59,7 @@ public class BeerServiceImpl implements BeerService {
 
         boolean duplicateExists = true;
         try {
-            Beer existingBeer = repository.get(beer.getName());
+            Beer existingBeer = repository.getByName(beer.getName());
             if (existingBeer.getId() == beer.getId()) {
                 duplicateExists = false;
             }

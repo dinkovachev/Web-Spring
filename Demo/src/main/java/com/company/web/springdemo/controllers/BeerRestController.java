@@ -3,7 +3,6 @@ package com.company.web.springdemo.controllers;
 import com.company.web.springdemo.exceptions.AuthorizationException;
 import com.company.web.springdemo.exceptions.EntityDuplicateException;
 import com.company.web.springdemo.exceptions.EntityNotFoundException;
-import com.company.web.springdemo.exceptions.UnauthorizedOperationException;
 import com.company.web.springdemo.helpers.AuthenticationHelper;
 import com.company.web.springdemo.helpers.BeerMapper;
 import com.company.web.springdemo.models.Beer;
@@ -36,7 +35,7 @@ public class BeerRestController {
     }
 
     @GetMapping
-    public List<Beer> get(
+    public List<Beer> getById(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Double minAbv,
             @RequestParam(required = false) Double maxAbv,
@@ -47,9 +46,18 @@ public class BeerRestController {
     }
 
     @GetMapping("/{id}")
-    public Beer get(@PathVariable int id) {
+    public Beer getById(@PathVariable int id) {
         try {
             return service.get(id);
+        } catch (EntityNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @GetMapping("/search")
+    public Beer getByName(@RequestParam String name) {
+        try {
+            return service.getByName(name);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
