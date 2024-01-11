@@ -1,5 +1,7 @@
 package com.company.web.springdemo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Objects;
 
 public class Beer {
