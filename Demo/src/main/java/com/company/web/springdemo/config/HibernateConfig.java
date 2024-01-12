@@ -44,7 +44,7 @@ public class HibernateConfig {
 
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
-        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MariaDBDialect");
 
         //Configure code-first capabilities(this can help to create database according to the classes that we create)*** not gonna use it
         //hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
