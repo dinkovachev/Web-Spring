@@ -120,8 +120,23 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User create(User user) {
-        return null;
+        try(Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.persist(user);
+            session.getTransaction().commit();
+        }
+        return user;
 
+
+    }
+
+    @Override
+    public void update(User user) {
+        try(Session session = sessionFactory.openSession()){
+            session.beginTransaction();
+            session.merge(user);
+            session.getTransaction().commit();
+        }
     }
     //JDBC implementation
 //    private List<User> getUsers(ResultSet userData) throws SQLException {

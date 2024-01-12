@@ -47,7 +47,7 @@ public class BeerRepositoryImpl implements BeerRepository {
         //Hibernate Implementation
         try(Session session = sessionFactory.openSession()) {
             Query<Beer> query = session.createQuery("from Beer", Beer.class);
-            return query.list();
+            return filterBeers(name, minAbv, maxAbv, styleId, sortBy, sortOrder, query.list());
 
         }
 
@@ -141,7 +141,9 @@ public class BeerRepositoryImpl implements BeerRepository {
     public void create(Beer beer, User user) {
         //Hibernate Implementation
         try(Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
             session.persist(beer);
+            session.getTransaction().commit();
         }
         //JDBC implementation
 //        String query = "INSERT INTO beers(name, abv, style_id, created_by) " +
@@ -214,6 +216,11 @@ public class BeerRepositoryImpl implements BeerRepository {
 
     @Override
     public void delete(int id) {
+        try(Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            session.remove(id);
+            session.getTransaction().commit();;
+        }
         //JDBC implementation
 //        String query = "DELETE from beers " +
 //                "WHERE beer_id= ?";
@@ -226,7 +233,6 @@ public class BeerRepositoryImpl implements BeerRepository {
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
-        throw new UnsupportedOperationException();
 
     }
 

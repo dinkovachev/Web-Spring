@@ -24,6 +24,7 @@ public class User {
     private String lastName;
     @Column(name = "email")
     private String email;
+
     @Column(name = "is_admin")
     private boolean isAdmin;
 
