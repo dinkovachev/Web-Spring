@@ -34,3 +34,16 @@ INSERT INTO beers.beers(beer_id, name, abv, style_id, created_by)
 VALUES(9, 'Black Head', 5.0, 5, 3);
 INSERT INTO beers.beers(beer_id, name, abv, style_id, created_by)
 VALUES(10, 'Pilsner Urquell', 4.4, 1, 3);
+
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (1,1,0);
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (1,2,0);
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (1,3,1);
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (1,5,1);
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (2,3,0);
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (2,4,0);
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (3,3,1);
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (3,5,1);
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (3,5,1);
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (3,7,1);
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (3,8,1);
+INSERT INTO beers.users_beers(user_id, beer_id, drunk) VALUES (3,10,1);
