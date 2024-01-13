@@ -14,8 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthenticationHelper {
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     public static final String INVALID_AUTHENTICATION_ERROR = "Invalid Credentials";
-    public static final String INVALID_PASSWORD_ERROR = "InvalidPassword";
-    public static final String INVALID_USERNAME_ERROR = "Invalid username";
     private final UserService service;
 
     @Autowired

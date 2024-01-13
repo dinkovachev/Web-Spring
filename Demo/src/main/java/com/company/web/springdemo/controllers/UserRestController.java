@@ -19,9 +19,9 @@ import java.util.List;
 @RequestMapping("api/users")
 public class UserRestController {
 
-    public static final String YOU_ARE_NOT_AUTHORIZED_TO_BROWSE_USER_INFORMATION_ERROR = "You are not authorized to browse user information.";
+    public static final String YOU_ARE_NOT_AUTHORIZED_TO_BROWSE_USER_INFORMATION_ERROR =
+            "You are not authorized to browse user information.";
     private final UserService userService;
-
     private final AuthenticationHelper authenticationHelper;
 
     @Autowired

@@ -2,7 +2,6 @@ package com.company.web.springdemo.services;
 
 import com.company.web.springdemo.models.Beer;
 import com.company.web.springdemo.models.User;
-import com.company.web.springdemo.repositories.BeerRepository;
 import com.company.web.springdemo.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +11,6 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
     private final BeerService beerService;
 
     public UserServiceImpl(UserRepository userRepository, BeerService beerService) {

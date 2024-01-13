@@ -1,16 +1,13 @@
 package com.company.web.springdemo.repositories;
 
 import com.company.web.springdemo.exceptions.EntityNotFoundException;
-import com.company.web.springdemo.models.Style;
 import com.company.web.springdemo.models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -89,11 +86,13 @@ public class UserRepositoryImpl implements UserRepository {
     public User getByUsername(String username) {
         //Hibernate Implementation
         try(Session session = sessionFactory.openSession()) {
-            User user = session.get(User.class, username);
-            if (user == null){
+            Query<User> query = session.createQuery("from User where username = :username", User.class);
+            query.setParameter("username", username);
+            List<User> result = query.list();
+            if (result.isEmpty()){
                 throw new EntityNotFoundException("User", "username", username);
             }
-            return user;
+            return result.get(0);
         }
         //JDBC implementation
 //        String query = "SELECT * " +
