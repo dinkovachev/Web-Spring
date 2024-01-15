@@ -7,7 +7,6 @@ import com.company.web.springdemo.helpers.AuthenticationHelper;
 import com.company.web.springdemo.helpers.BeerMapper;
 import com.company.web.springdemo.models.Beer;
 import com.company.web.springdemo.models.BeerDto;
-import com.company.web.springdemo.models.FilterOptions;
 import com.company.web.springdemo.models.User;
 import com.company.web.springdemo.services.BeerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,8 @@ public class BeerRestController {
 
     private final BeerService service;
     private final BeerMapper beerMapper;
-    private final AuthenticationHelper authenticationHelper;
+
+    private AuthenticationHelper authenticationHelper;
 
     @Autowired
     public BeerRestController(BeerService service, BeerMapper beerMapper, AuthenticationHelper authenticationHelper) {
@@ -36,30 +36,20 @@ public class BeerRestController {
     }
 
     @GetMapping
-    public List<Beer> getById(
+    public List<Beer> get(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Double minAbv,
             @RequestParam(required = false) Double maxAbv,
             @RequestParam(required = false) Integer styleId,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortOrder) {
-        FilterOptions filterOption = new FilterOptions(name, minAbv, maxAbv, styleId, sortBy, sortBy);
-        return service.getAll(filterOption);
+        return service.get(name, minAbv, maxAbv, styleId, sortBy, sortOrder);
     }
 
     @GetMapping("/{id}")
-    public Beer getById(@PathVariable int id) {
+    public Beer get(@PathVariable int id) {
         try {
             return service.get(id);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-    }
-
-    @GetMapping("/search")
-    public Beer getByName(@RequestParam String name) {
-        try {
-            return service.getByName(name);
         } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
@@ -76,7 +66,7 @@ public class BeerRestController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         } catch (EntityDuplicateException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        } catch (AuthorizationException e){
+        } catch (AuthorizationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }

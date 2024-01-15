@@ -94,6 +94,13 @@ public class UserRepositoryImpl implements UserRepository {
             }
             return result.get(0);
         }
+//        try(Session session = sessionFactory.openSession()) {
+//            User user = session.get(User.class,username);
+//            if (user == null){
+//                throw new EntityNotFoundException("User", "user", username);
+//            }
+//            return user;
+//        }
         //JDBC implementation
 //        String query = "SELECT * " +
 //                "from users " +
